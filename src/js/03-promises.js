@@ -17,29 +17,37 @@ function onClick(e) {
 	const delayStep = Number(refs.formStep.value);
 	const amount = Number(refs.formAmount.value);
 
-
-  let msCounter = firstDelay;
-  let promiseCounter = 1;
+	let msCounter = firstDelay;
+	let promiseCounter = 1;
 
 	setTimeout(() => {
-    setInterval(() => {
-      
+		setInterval(() => {
 			if (promiseCounter === amount + 1) {
 				return;
-      }
-      createPromise(promiseCounter, msCounter);      
+			}
+			createPromise(promiseCounter, msCounter)
+				.then(({ position, delay }) => {
+					Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+				})
+				.catch(({ position, delay }) => {
+					Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+				});;
 			msCounter += delayStep;
-      promiseCounter += 1;
-      
+			promiseCounter += 1;
 		}, delayStep);
 	}, firstDelay);
 }
 
 function createPromise(position, delay) {
 	const shouldResolve = Math.random() > 0.3;
-	if (shouldResolve) {
-		// Fulfill
-	} else {
-		// Reject
-	}
-}
+
+	const promise = new Promise((resolve, reject)=>{
+		if (shouldResolve) {
+			resolve({ position, delay });
+		} else {
+			reject({ position, delay });
+		}
+	})
+	return promise 
+};
+
