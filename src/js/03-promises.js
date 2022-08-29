@@ -17,8 +17,8 @@ function onClick(e) {
 	const delayStep = Number(refs.formStep.value);
 	const amount = Number(refs.formAmount.value);
 
-	for (let i = 1, delay = firstDelay; i <= amount; i += 1, delay += delayStep) {
-		createPromise(i, delay)
+	for (let i = 1; i <= amount; i += 1) {
+		createPromise(i, firstDelay + (i - 1) * delayStep)
 			.then(({ position, delay }) => {
 				Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
 			})
